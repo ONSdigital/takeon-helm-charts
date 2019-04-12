@@ -53,18 +53,13 @@ spec:
                 configMapKeyRef:
                   name: db-port
                   key: DB_PORT
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.dbLayer.service.port }}
-            initialDelaySeconds: 180
-            periodSeconds: 10
           livenessProbe:
             exec:
               command:
               - /opt/mssql-tools/bin/sqlcmd -U sa -P ${DATASOURCE_PASSWORD} -Q "SELECT @@SERVERNAME" > /sql_scripts/output
               - cat /sql_scripts/output
             initialDelaySeconds: 190
-            periodSeconds: 10
+            periodSeconds: 20
           resources:
             {{- toYaml .Values.dbLayer.resources | nindent 12 }}
       {{- with .Values.dbLayer.nodeSelector }}
