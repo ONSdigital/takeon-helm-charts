@@ -55,13 +55,13 @@ spec:
                   key: DB_PORT
           readinessProbe:
             httpGet:
-              path: /contributor/help
+              path: /actuator/health
               port: {{ .Values.persistenceLayer.service.port }}
             initialDelaySeconds: 180
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /contributor/help
+              path: /actuator/health
               port: {{ .Values.persistenceLayer.service.port }}
             initialDelaySeconds: 200
             periodSeconds: 10
