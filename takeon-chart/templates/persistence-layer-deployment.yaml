@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.persistenceLayer.name }}-{{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.persistenceLayer.name }}
+    helm.sh/chart: {{ include "takeon-chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.persistenceLayer.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.persistenceLayer.name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.persistenceLayer.name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.persistenceLayer.name }}
+          image: "{{ .Values.persistenceLayer.image.repository }}:{{ .Values.persistenceLayer.image.tag }}"
+          imagePullPolicy: {{ .Values.persistenceLayer.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8090
+              protocol: TCP
+          env:
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: datasource_username
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: datasource_password
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-name
+                  key: DB_NAME
+            - name: DB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: db-server
+                  key: DB_SERVER
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-port
+                  key: DB_PORT
+          readinessProbe:
+            httpGet:
+              path: /contributor/help
+              port: {{ .Values.persistenceLayer.service.port }}
+            initialDelaySeconds: 180
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /contributor/help
+              port: {{ .Values.persistenceLayer.service.port }}
+            initialDelaySeconds: 200
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.persistenceLayer.resources | nindent 12 }}
+      {{- with .Values.persistenceLayer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.persistenceLayer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.persistenceLayer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

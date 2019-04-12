@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.businessLayer.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.businessLayer.name }}
+    helm.sh/chart: {{ include "takeon-chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.businessLayer.service.type }}
+  ports:
+    - port: {{ .Values.businessLayer.service.port }}
+      targetPort: {{ .Values.businessLayer.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ .Values.businessLayer.name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.validationPersistenceLayer.name }}-{{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.validationPersistenceLayer.name }}
+    helm.sh/chart: {{ include "takeon-chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.validationPersistenceLayer.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.validationPersistenceLayer.name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.validationPersistenceLayer.name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.validationPersistenceLayer.name }}
+          image: "{{ .Values.validationPersistenceLayer.image.repository }}:{{ .Values.validationPersistenceLayer.image.tag }}"
+          imagePullPolicy: {{ .Values.validationPersistenceLayer.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: datasource_username
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: datasource_password
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-name
+                  key: DB_NAME
+            - name: DB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: db-server
+                  key: DB_SERVER
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-port
+                  key: DB_PORT
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.validationPersistenceLayer.service.port }}
+            initialDelaySeconds: 180
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.validationPersistenceLayer.service.port }}
+            initialDelaySeconds: 190
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.validationPersistenceLayer.resources | nindent 12 }}
+      {{- with .Values.validationPersistenceLayer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.validationPersistenceLayer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.validationPersistenceLayer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

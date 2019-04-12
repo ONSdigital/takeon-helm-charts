@@ -1,0 +1,94 @@
+Application deployed....
+
+
+1. Get the Persistence Layer application URL by running these commands:
+{{- if .Values.persistenceLayer.ingress.enabled }}
+{{- range $host := .Values.persistenceLayer.ingress.hosts }}
+  {{- range $.Values.persistenceLayer.ingress.paths }}
+  http{{ if $.Values.persistenceLayer.ingress.tls }}s{{ end }}://{{ $host }}{{ . }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.persistenceLayer.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ .Values.persistenceLayer.name }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.persistenceLayer.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get svc -w {{ .Values.persistenceLayer.name }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ .Values.persistenceLayer.name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.persistenceLayer.service.port }}
+{{- else if contains "ClusterIP" .Values.persistenceLayer.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ .Values.persistenceLayer.name }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8090 to use your application"
+  kubectl port-forward $POD_NAME 8090:8090
+{{- end }}
+
+
+2. Get the Validation Persistence Layer application URL by running these commands:
+{{- if .Values.validationPersistenceLayer.ingress.enabled }}
+{{- range $host := .Values.validationPersistenceLayer.ingress.hosts }}
+  {{- range $.Values.validationPersistenceLayer.ingress.paths }}
+  http{{ if $.Values.validationPersistenceLayer.ingress.tls }}s{{ end }}://{{ $host }}{{ . }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.validationPersistenceLayer.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ .Values.validationPersistenceLayer.name }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.validationPersistenceLayer.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get svc -w {{ .Values.validationPersistenceLayer.name }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ .Values.validationPersistenceLayer.name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.validationPersistenceLayer.service.port }}
+{{- else if contains "ClusterIP" .Values.validationPersistenceLayer.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ .Values.validationPersistenceLayer.name }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8099 to use your application"
+  kubectl port-forward $POD_NAME 8099:8099
+{{- end }}
+
+
+3. Get the Business Layer application URL by running these commands:
+{{- if .Values.businessLayer.ingress.enabled }}
+{{- range $host := .Values.businessLayer.ingress.hosts }}
+  {{- range $.Values.businessLayer.ingress.paths }}
+  http{{ if $.Values.businessLayer.ingress.tls }}s{{ end }}://{{ $host }}{{ . }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.businessLayer.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ .Values.businessLayer.name }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.businessLayer.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get svc -w {{ .Values.businessLayer.name }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ .Values.businessLayer.name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.businessLayer.service.port }}
+{{- else if contains "ClusterIP" .Values.businessLayer.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ .Values.businessLayer.name }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8088 to use your application"
+  kubectl port-forward $POD_NAME 8088:8088
+{{- end }}
+
+
+4. Get the UI Layer application URL by running these commands:
+{{- if .Values.uiLayer.ingress.enabled }}
+{{- range $host := .Values.uiLayer.ingress.hosts }}
+  {{- range $.Values.uiLayer.ingress.paths }}
+  http{{ if $.Values.uiLayer.ingress.tls }}s{{ end }}://{{ $host }}{{ . }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.uiLayer.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ .Values.uiLayer.name }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.uiLayer.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get svc -w {{ .Values.uiLayer.name }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ .Values.uiLayer.name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.uiLayer.service.port }}
+{{- else if contains "ClusterIP" .Values.uiLayer.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ .Values.uiLayer.name }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:5000 to use your application"
+  kubectl port-forward $POD_NAME 5000:5000
+{{- end }}
+

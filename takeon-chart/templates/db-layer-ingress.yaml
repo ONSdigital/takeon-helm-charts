@@ -1,0 +1,40 @@
+{{- if .Values.dbLayer.ingress.enabled -}}
+{{- $fullName := .Values.dbLayer.name -}}
+{{- $ingressPaths := .Values.dbLayer.ingress.paths -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.dbLayer.name }}
+    helm.sh/chart: {{ include "takeon-chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  {{- with .Values.dbLayer.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.dbLayer.ingress.tls }}
+  tls:
+  {{- range .Values.dbLayer.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.dbLayer.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+	{{- range $ingressPaths }}
+          - path: {{ . }}
+            backend:
+              serviceName: {{ $fullName }}
+              servicePort: http
+	{{- end }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,239 @@
+# Default values for takeon-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+    dbLayer:
+        name: db-layer
+        replicaCount: 1
+
+        image:
+          repository: takeonacr.azurecr.io/sql_server
+          tag: latest
+          pullPolicy: Always
+
+        nameOverride: ""
+        fullnameOverride: ""
+
+        service:
+          type: ClusterIP
+          port: 1433
+
+        ingress:
+          enabled: false
+          annotations: {}
+            # kubernetes.io/ingress.class: nginx
+            # kubernetes.io/tls-acme: "true"
+          paths: []
+          hosts:
+            - chart-example.local
+          tls: []
+          #  - secretName: chart-example-tls
+          #    hosts:
+          #      - chart-example.local
+
+        resources: {}
+          # We usually recommend not to specify default resources and to leave this as a conscious
+          # choice for the user. This also increases chances charts run on environments with little
+          # resources, such as Minikube. If you do want to specify resources, uncomment the following
+          # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+          # limits:
+          #  cpu: 100m
+          #  memory: 128Mi
+          # requests:
+          #  cpu: 100m
+          #  memory: 128Mi
+
+        nodeSelector: {}
+
+        tolerations: []
+
+        affinity: {}
+
+    persistenceLayer:
+        name: persistence-layer
+        replicaCount: 1
+
+        image:
+          repository: takeonacr.azurecr.io/persistence-layer
+          tag: latest
+          pullPolicy: Always
+
+        nameOverride: ""
+        fullnameOverride: ""
+
+        service:
+          type: ClusterIP
+          port: 8090
+
+        ingress:
+          enabled: false
+          annotations: {}
+            # kubernetes.io/ingress.class: nginx
+            # kubernetes.io/tls-acme: "true"
+          paths: []
+          hosts:
+            - chart-example.local
+          tls: []
+          #  - secretName: chart-example-tls
+          #    hosts:
+          #      - chart-example.local
+
+        resources: {}
+          # We usually recommend not to specify default resources and to leave this as a conscious
+          # choice for the user. This also increases chances charts run on environments with little
+          # resources, such as Minikube. If you do want to specify resources, uncomment the following
+          # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+          # limits:
+          #  cpu: 100m
+          #  memory: 128Mi
+          # requests:
+          #  cpu: 100m
+          #  memory: 128Mi
+
+        nodeSelector: {}
+
+        tolerations: []
+
+        affinity: {}
+
+    businessLayer:
+        name: business-layer
+        replicaCount: 1
+
+        image:
+          repository: takeonacr.azurecr.io/business-layer
+          tag: latest
+          pullPolicy: Always
+
+        nameOverride: ""
+        fullnameOverride: ""
+
+        service:
+          type: ClusterIP
+          port: 8088
+
+        ingress:
+          enabled: false
+          annotations: {}
+            # kubernetes.io/ingress.class: nginx
+            # kubernetes.io/tls-acme: "true"
+          paths: []
+          hosts:
+            - chart-example.local
+          tls: []
+          #  - secretName: chart-example-tls
+          #    hosts:
+          #      - chart-example.local
+
+        resources: {}
+          # We usually recommend not to specify default resources and to leave this as a conscious
+          # choice for the user. This also increases chances charts run on environments with little
+          # resources, such as Minikube. If you do want to specify resources, uncomment the following
+          # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+          # limits:
+          #  cpu: 100m
+          #  memory: 128Mi
+          # requests:
+          #  cpu: 100m
+          #  memory: 128Mi
+
+        nodeSelector: {}
+
+        tolerations: []
+
+        affinity: {}
+        
+    validationPersistenceLayer:
+        name: validation-persistence-layer
+        replicaCount: 1
+
+        image:
+          repository: takeonacr.azurecr.io/validation-persistence
+          tag: latest
+          pullPolicy: Always
+
+        nameOverride: ""
+        fullnameOverride: ""
+
+        service:
+          type: ClusterIP
+          port: 8099
+
+        ingress:
+          enabled: false
+          annotations: {}
+            # kubernetes.io/ingress.class: nginx
+            # kubernetes.io/tls-acme: "true"
+          paths: []
+          hosts:
+            - chart-example.local
+          tls: []
+          #  - secretName: chart-example-tls
+          #    hosts:
+          #      - chart-example.local
+
+        resources: {}
+          # We usually recommend not to specify default resources and to leave this as a conscious
+          # choice for the user. This also increases chances charts run on environments with little
+          # resources, such as Minikube. If you do want to specify resources, uncomment the following
+          # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+          # limits:
+          #  cpu: 100m
+          #  memory: 128Mi
+          # requests:
+          #  cpu: 100m
+          #  memory: 128Mi
+
+        nodeSelector: {}
+    
+    uiLayer:
+        name: ui-layer
+        replicaCount: 1
+
+        image:
+          repository: takeonacr.azurecr.io/takeon-ui
+          tag: latest
+          pullPolicy: Always
+
+        nameOverride: ""
+        fullnameOverride: ""
+
+        service:
+          type: ClusterIP
+          port: 5000
+
+        ingress:
+          enabled: false
+          annotations: {}
+            # kubernetes.io/ingress.class: nginx
+            # kubernetes.io/tls-acme: "true"
+          paths: []
+          hosts:
+            - chart-example.local
+          tls: []
+          #  - secretName: chart-example-tls
+          #    hosts:
+          #      - chart-example.local
+
+        resources: {}
+          # We usually recommend not to specify default resources and to leave this as a conscious
+          # choice for the user. This also increases chances charts run on environments with little
+          # resources, such as Minikube. If you do want to specify resources, uncomment the following
+          # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+          # limits:
+          #  cpu: 100m
+          #  memory: 128Mi
+          # requests:
+          #  cpu: 100m
+          #  memory: 128Mi
+
+        nodeSelector: {}
+
+        tolerations: []
+
+        affinity: {}
+        tolerations: []
+
+        affinity: {}
+
+

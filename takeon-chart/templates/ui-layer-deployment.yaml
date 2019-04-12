@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.uiLayer.name }}-{{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.uiLayer.name }}
+    helm.sh/chart: {{ include "takeon-chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.uiLayer.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.uiLayer.name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.uiLayer.name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.uiLayer.name }}
+          image: "{{ .Values.uiLayer.image.repository }}:{{ .Values.uiLayer.image.tag }}"
+          imagePullPolicy: {{ .Values.uiLayer.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          env:
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: datasource_username
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: datasource_password
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-name
+                  key: DB_NAME
+            - name: DB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: db-server
+                  key: DB_SERVER
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-port
+                  key: DB_PORT
+          readinessProbe:
+            httpGet:
+              path: /contributor/help
+              port: {{ .Values.uiLayer.service.port }}
+            initialDelaySeconds: 180
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /contributor/help
+              port: {{ .Values.uiLayer.service.port }}
+            initialDelaySeconds: 200
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.uiLayer.resources | nindent 12 }}
+      {{- with .Values.uiLayer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.uiLayer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.uiLayer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

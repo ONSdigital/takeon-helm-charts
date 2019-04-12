@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.persistenceLayer.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.persistenceLayer.name }}
+    helm.sh/chart: {{ include "takeon-chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.persistenceLayer.service.type }}
+  ports:
+    - port: {{ .Values.persistenceLayer.service.port }}
+      targetPort: {{ .Values.persistenceLayer.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ .Values.persistenceLayer.name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
