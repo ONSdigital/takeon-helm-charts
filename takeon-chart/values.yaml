@@ -185,6 +185,10 @@
           #  memory: 128Mi
 
         nodeSelector: {}
+        
+        tolerations: []
+        
+        affinity: {}
     
     uiLayer:
         name: ui-layer
@@ -229,9 +233,6 @@
 
         nodeSelector: {}
 
-        tolerations: []
-
-        affinity: {}
         tolerations: []
 
         affinity: {}
