@@ -56,8 +56,9 @@ spec:
           livenessProbe:
             exec:
               command:
+              - /bin/sh
+              - c
               - /opt/mssql-tools/bin/sqlcmd -U sa -P ${DATASOURCE_PASSWORD} -Q "SELECT @@SERVERNAME" > /sql_scripts/output
-              - cat /sql_scripts/output
             initialDelaySeconds: 190
             periodSeconds: 20
           resources:
