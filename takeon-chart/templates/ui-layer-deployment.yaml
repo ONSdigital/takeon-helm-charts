@@ -53,18 +53,6 @@ spec:
                 configMapKeyRef:
                   name: db-port
                   key: DB_PORT
-          readinessProbe:
-            httpGet:
-              path: /contributor/help
-              port: {{ .Values.uiLayer.service.port }}
-            initialDelaySeconds: 180
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /contributor/help
-              port: {{ .Values.uiLayer.service.port }}
-            initialDelaySeconds: 200
-            periodSeconds: 10
           resources:
             {{- toYaml .Values.uiLayer.resources | nindent 12 }}
       {{- with .Values.uiLayer.nodeSelector }}
