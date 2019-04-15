@@ -57,13 +57,13 @@ spec:
             httpGet:
               path: /actuator/health
               port: {{ .Values.persistenceLayer.service.port }}
-            initialDelaySeconds: 180
+            initialDelaySeconds: 200
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /actuator/health
               port: {{ .Values.persistenceLayer.service.port }}
-            initialDelaySeconds: 200
+            initialDelaySeconds: 210
             periodSeconds: 10
           resources:
             {{- toYaml .Values.persistenceLayer.resources | nindent 12 }}

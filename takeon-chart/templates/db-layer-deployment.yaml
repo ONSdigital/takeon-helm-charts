@@ -53,11 +53,16 @@ spec:
                 configMapKeyRef:
                   name: db-port
                   key: DB_PORT
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.dbLayer.service.port }}
+            initialDelaySeconds: 180
+            periodSeconds: 10
           livenessProbe:
             exec:
               command:
               - /bin/sh
-              - c
+              - -c
               - /opt/mssql-tools/bin/sqlcmd -U sa -P ${DATASOURCE_PASSWORD} -Q "SELECT @@SERVERNAME" > /sql_scripts/output
             initialDelaySeconds: 190
             periodSeconds: 20

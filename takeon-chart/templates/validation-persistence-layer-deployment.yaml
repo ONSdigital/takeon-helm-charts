@@ -56,12 +56,12 @@ spec:
           readinessProbe:
             tcpSocket:
               port: {{ .Values.validationPersistenceLayer.service.port }}
-            initialDelaySeconds: 180
+            initialDelaySeconds: 200
             periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: {{ .Values.validationPersistenceLayer.service.port }}
-            initialDelaySeconds: 190
+            initialDelaySeconds: 210
             periodSeconds: 10
           resources:
             {{- toYaml .Values.validationPersistenceLayer.resources | nindent 12 }}

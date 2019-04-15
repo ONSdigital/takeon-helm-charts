@@ -27,6 +27,18 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.businessLayer.service.port }}
+            initialDelaySeconds: 200
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.businessLayer.service.port }}
+            initialDelaySeconds: 210
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.businessLayer.resources | nindent 12 }}
       {{- with .Values.businessLayer.nodeSelector }}
