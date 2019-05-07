@@ -15,9 +15,13 @@ These services are:
 -   Business Logic Layer
 -   UI Layer
 
-**Installing the Chart**
+**Installing the Chart from Git Repo**
 
     $ helm install -n ./takeon-chart/
+
+**Installing the Chart from the package**
+
+    $ helm install takeon-chart-0.0.1.tgz --debug
 
 **To list all releases on the Cluster**
 
