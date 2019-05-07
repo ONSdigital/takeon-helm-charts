@@ -21,7 +21,7 @@ These services are:
 
 **Installing the Chart from the package**
 
-    $ helm install takeon-chart-0.0.1.tgz --debug
+    $ helm install takeon-chart-0.1.0.tgz --debug
 
 **To list all releases on the Cluster**
 
