@@ -29,5 +29,5 @@ These services are:
 
 **Uninstalling the Chart**
 
-    $ helm delete or $ helm del --purge
+    $ helm delete or $ helm del --purge <release-name>
 
