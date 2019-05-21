@@ -17,7 +17,7 @@ These services are:
 
 **Installing the Chart from Git Repo**
 
-    $ helm install -n ./takeon-chart/
+    $ helm install -n <release-name> ./takeon-chart/
 
 **Installing the Chart from the package**
 
